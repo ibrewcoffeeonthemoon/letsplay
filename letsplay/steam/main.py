@@ -1,8 +1,6 @@
 from typing import Annotated, Literal
 
 import typer
-import vdf
-from click import launch
 from typer import Argument, Option
 
 from .config import SteamLocalConfig
@@ -24,9 +22,9 @@ def steam(
     # pkill -e -f "steam|gamescope|steamvr|wine"
 
     # modify steam local config
-    with SteamLocalConfig() as cfg:
+    with SteamLocalConfig(app_id) as cfg:
         if launch_options:
-            cfg.set_launch_option(app_id, 'launch_options')
+            cfg.set_launch_options('some new launch options')
 
     # 3. command to use
     cmd = ' '.join((part for part in (

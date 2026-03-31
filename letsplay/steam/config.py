@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from typing import Any, Self
 
@@ -6,11 +7,12 @@ import vdf
 
 
 class SteamLocalConfig:
-    def __init__(self) -> None:
-        self.path = self._resolve_path()
-        self.data = self._load()
+    def __init__(self, app_id: int) -> None:
+        self._app_id = str(app_id)
 
     def __enter__(self) -> Self:
+        self.path = self._resolve_path()
+        self.data = self._load()
         return self
 
     def __exit__(self, *_) -> None:
@@ -31,11 +33,11 @@ class SteamLocalConfig:
             return vdf.load(f)
 
     def _save(self) -> None:
-        if self.data is None:
-            rich.print('[red]Invalid data, abort saving to config file[/]')
-            return
+        shutil.copy2(self.path, self.path.with_suffix(self.path.suffix + '.bak'))
         with open(self.path, 'w') as f:
             vdf.dump(self.data, f, pretty=True)
 
-    def set_launch_option(self, app_id: int, val: str) -> None:
-        breakpoint()
+    def set_launch_options(self, val: str) -> None:
+        apps = self.data['UserLocalConfigStore']['Software']['Valve']['Steam']['apps']
+        app = apps[self._app_id]
+        app['LaunchOptions'] = val
