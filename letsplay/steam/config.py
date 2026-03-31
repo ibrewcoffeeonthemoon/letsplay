@@ -7,8 +7,8 @@ import vdf
 
 
 class SteamLocalConfig:
-    def __init__(self, app_id: int) -> None:
-        self._app_id = str(app_id)
+    def __init__(self, app_id: str) -> None:
+        self._app_id = app_id
 
     def __enter__(self) -> Self:
         # kill steam

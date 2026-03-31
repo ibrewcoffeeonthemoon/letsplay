@@ -19,8 +19,11 @@ def steam(
     mangohud: Annotated[bool, Option('--mangohud', help='Enable MangoHUD overlay using the prefix method')] = False,
     launch_options: Annotated[str | None, Option('--launch-options', '-l', help='Additional Steam launch arguments')] = None,
 ) -> None:
+    # preprocess
+    _app_id = str(app_id)
+
     # modify steam local config
-    with SteamLocalConfig(app_id) as cfg:
+    with SteamLocalConfig(_app_id) as cfg:
         if launch_options:
             cfg.set_launch_options(launch_options)
 
@@ -29,7 +32,7 @@ def steam(
         'mangohud' if mangohud else None,
         'steam',
         None if show_steam else '-silent',
-        '-applaunch', str(app_id),
+        '-applaunch', _app_id,
     ) if part is not None]
     # replace the python process with the game process
     os.execvp(cmd[0], cmd)
