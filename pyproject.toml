@@ -11,6 +11,7 @@ authors = [
 ]
 dependencies = [
     "typer",
+    "vdf>=3.4",
 ]
 requires-python = ">=3.14"
 
