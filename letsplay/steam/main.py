@@ -18,9 +18,6 @@ def steam(
     mangohud: Annotated[Literal['env', 'cmd'] | None, Option('--mangohud', help='Enable MangoHUD overlay')] = None,
     launch_options: Annotated[str | None, Option('--launch-options', '-l', help='Additional Steam launch arguments')] = None,
 ) -> None:
-    # 1. kill all
-    # pkill -e -f "steam|gamescope|steamvr|wine"
-
     # modify steam local config
     with SteamLocalConfig(app_id) as cfg:
         if launch_options:

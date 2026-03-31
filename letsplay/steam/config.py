@@ -1,8 +1,8 @@
 import shutil
+import subprocess
 from pathlib import Path
 from typing import Any, Self
 
-import rich
 import vdf
 
 
@@ -11,6 +11,9 @@ class SteamLocalConfig:
         self._app_id = str(app_id)
 
     def __enter__(self) -> Self:
+        # kill steam
+        self._kill_steam_related_apps()
+        # load config data
         self.path = self._resolve_path()
         self.data = self._load()
         return self
@@ -18,6 +21,10 @@ class SteamLocalConfig:
     def __exit__(self, *_) -> None:
         # self._save()
         pass
+
+    def _kill_steam_related_apps(self) -> None:
+        # cmd: pkill -e -f "steam|gamescope|steamvr|wine"
+        subprocess.run(['pkill', 'steam|gamescope|wine'])
 
     def _resolve_path(self) -> Path:
         base_path = Path('~/.local/share/Steam/userdata/').expanduser()
@@ -33,11 +40,15 @@ class SteamLocalConfig:
             return vdf.load(f)
 
     def _save(self) -> None:
+        # create backup
         shutil.copy2(self.path, self.path.with_suffix(self.path.suffix + '.bak'))
+        # write file
         with open(self.path, 'w') as f:
             vdf.dump(self.data, f, pretty=True)
 
     def set_launch_options(self, val: str) -> None:
         apps = self.data['UserLocalConfigStore']['Software']['Valve']['Steam']['apps']
         app = apps[self._app_id]
+        print(app)
         app['LaunchOptions'] = val
+        print(app)
