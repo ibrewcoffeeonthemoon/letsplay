@@ -1,7 +1,11 @@
 from typing import Annotated, Literal
 
 import typer
+import vdf
+from click import launch
 from typer import Argument, Option
+
+from .config import SteamLocalConfig
 
 app = typer.Typer()
 
@@ -19,11 +23,10 @@ def steam(
     # 1. kill all
     # pkill -e -f "steam|gamescope|steamvr|wine"
 
-    # 2. launch_options
-    if launch_options:
-        # change launch options in steam config:
-        # ~/.local/share/Steam/userdata/1441367642/config/localconfig.vdf
-        pass
+    # modify steam local config
+    with SteamLocalConfig() as cfg:
+        if launch_options:
+            cfg.set_launch_option(app_id, 'launch_options')
 
     # 3. command to use
     cmd = ' '.join((part for part in (
