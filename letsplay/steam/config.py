@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Self
 
-import vdf
+import vdf  # type: ignore
 
 
 class SteamLocalConfig:

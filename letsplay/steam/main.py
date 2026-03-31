@@ -1,5 +1,5 @@
 import os
-from typing import Annotated, Literal
+from typing import Annotated
 
 import typer
 from typer import Argument, Option
