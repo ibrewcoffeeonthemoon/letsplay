@@ -24,7 +24,7 @@ def steam(
 
     # modify steam local config
     with SteamLocalConfig(_app_id) as cfg:
-        if launch_options:
+        if launch_options is not None:
             cfg.set_launch_options(launch_options)
 
     # run the game
