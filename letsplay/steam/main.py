@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 import typer
 from typer import Argument, Option
@@ -13,12 +13,12 @@ app = typer.Typer()
 def steam(
     app_id: Annotated[int, Argument(help='The Steam App ID of the game to launch')],
     show_steam: Annotated[bool, Option('--show-steam', help='Show steam window')] = False,
-    mangohud: Annotated[bool, Option('--mangohud', help='Enable MangoHUD overlay')] = False,
+    mangohud: Annotated[Literal['env', 'cmd'] | None, Option('--mangohud', help='Enable MangoHUD overlay')] = None,
     launch_options: Annotated[str, Option('--launch-options', '-l', help='Additional Steam launch arguments')] = '',
 ) -> None:
     # command to use
     cmd = ' '.join((part for part in (
-        'mangohud' if mangohud else '',
+        'mangohud' if mangohud == 'cmd' else 'MANGOHUD=1' if mangohud == 'env' else '',
         'steam',
         '' if show_steam else '-silent',
         f'-applaunch {app_id}',
