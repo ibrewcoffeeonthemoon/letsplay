@@ -14,13 +14,12 @@ class SteamLocalConfig:
         # kill steam
         self._kill_steam_related_apps()
         # load config data
-        self.path = self._resolve_path()
-        self.data = self._load()
+        self._path = self._resolve_path()
+        self._data = self._load()
         return self
 
     def __exit__(self, *_) -> None:
-        # self._save()
-        pass
+        self._save()
 
     def _kill_steam_related_apps(self) -> None:
         # cmd: pkill -e -f "steam|gamescope|steamvr|wine"
@@ -36,19 +35,17 @@ class SteamLocalConfig:
         return user_config_paths[-1]
 
     def _load(self) -> dict[str, Any]:
-        with open(self.path) as f:
+        with open(self._path) as f:
             return vdf.load(f)
 
     def _save(self) -> None:
         # create backup
-        shutil.copy2(self.path, self.path.with_suffix(self.path.suffix + '.bak'))
+        shutil.copy2(self._path, self._path.with_suffix(self._path.suffix + '.bak'))
         # write file
-        with open(self.path, 'w') as f:
-            vdf.dump(self.data, f, pretty=True)
+        with open(self._path, 'w') as f:
+            vdf.dump(self._data, f, pretty=True)
 
     def set_launch_options(self, val: str) -> None:
-        apps = self.data['UserLocalConfigStore']['Software']['Valve']['Steam']['apps']
+        apps = self._data['UserLocalConfigStore']['Software']['Valve']['Steam']['apps']
         app = apps[self._app_id]
-        print(app)
         app['LaunchOptions'] = val
-        print(app)

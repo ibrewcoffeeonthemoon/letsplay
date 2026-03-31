@@ -21,7 +21,7 @@ def steam(
     # modify steam local config
     with SteamLocalConfig(app_id) as cfg:
         if launch_options:
-            cfg.set_launch_options('some new launch options')
+            cfg.set_launch_options(launch_options)
 
     # 3. command to use
     cmd = ' '.join((part for part in (
@@ -30,6 +30,4 @@ def steam(
         '' if show_steam else '-silent',
         f'-applaunch {app_id}',
     ) if part))
-    print(f'{cmd=}')
-    print(f'{launch_options=}')
     # execute this command
